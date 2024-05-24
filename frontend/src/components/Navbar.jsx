@@ -13,9 +13,10 @@ function classNames(...classes) {
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
-
+const  [isSuperuser, setIsSuperuser] = useState(false)
   useEffect(() => {
     checkUserLoggedIn();
+    checkSuperuser();
   }, []);
 
   const checkUserLoggedIn = () => {
@@ -25,11 +26,20 @@ export default function Navbar() {
         })
         .catch((err) => alert(err));
   };
+   const checkSuperuser = async () => {
+        try {
+            const res = await api.get("/api/check_superuser/")
+            console.log("Response from check_superuser:", res)
+            setIsSuperuser(res.data.is_superuser)
+        } catch (err) {
+            console.error("Error checking superuser:", err)
+        }
+    }
 
   const navigation = [
     { name: 'Home', href: '/' },
     { name: 'Courses', href: '/courses' },
-    { name: 'Add Course', href: '/add-course' },
+   isSuperuser && { name: 'Add Course', href: '/add-course' },
   ];
 
   const userNavigation = [
