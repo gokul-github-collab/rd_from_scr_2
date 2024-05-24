@@ -1,19 +1,32 @@
 import React, { useState } from 'react';
 import { FaMapMarker } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import api from '../api'; // Make sure to import your API utility
 
 const CourseItem = ({ course }) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const [fullDescription, setFullDescription] = useState(course.description);
+  const [isLoading, setIsLoading] = useState(false);
 
-  let description = course.description;
+  const handleToggleDescription = async () => {
+    setShowFullDescription((prevState) => !prevState);
 
-  if (!showFullDescription) {
-    description = description.substring(0, 90) + '...';
-  }
+    if (!showFullDescription && fullDescription === course.description) {
+      setIsLoading(true);
+      try {
+        const response = await api.get(`/api/courses/${course.id}/details`);
+        setFullDescription(response.data.fullDescription);
+      } catch (error) {
+        console.error("Error fetching full description:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  let description = showFullDescription ? fullDescription : course.description.substring(0, 90) + '...';
 
   return (
-
-
     <div className="bg-white rounded-xl shadow-md relative">
       <div className="p-4">
         <div className="mb-6">
@@ -23,14 +36,11 @@ const CourseItem = ({ course }) => {
 
         <div className="mb-5">{description}</div>
         <button
-          onClick={() => setShowFullDescription((prevState) => !prevState)}
-          className="text-indogo-500 mb-5 hover:text-indigo-600"
+          onClick={handleToggleDescription}
+          className="text-indigo-500 mb-5 hover:text-indigo-600"
         >
           {showFullDescription ? 'Less' : 'More'}
         </button>
-
-
-        {/* <h3 className="text-indigo-500 mb-2">{course.tuition_fee} / year</h3> */}
 
         <div className="border border-gray-100 mb-5"></div>
 
@@ -48,8 +58,7 @@ const CourseItem = ({ course }) => {
         </div>
       </div>
     </div>
-  )
-    ;
+  );
 };
 
 export default CourseItem;

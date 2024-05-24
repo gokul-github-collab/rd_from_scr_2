@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api';
 import NotFound from '../pages/NotFound';
@@ -21,28 +20,28 @@ const AddCourseContent = () => {
     }
   }, [id]);
 
-  const checkSuperuser = () => {
-    api.get("/api/check_superuser/")
-      .then((res) => {
-        console.log("Response from check_superuser:", res);
-        setIsSuperuser(res.data.is_superuser);
-      })
-      .catch((err) => {
-        console.error("Error checking superuser:", err);
-      });
+  const checkSuperuser = async () => {
+    try {
+      const res = await api.get("/api/check_superuser/");
+      console.log("Response from check_superuser:", res);
+      setIsSuperuser(res.data.is_superuser);
+    } catch (err) {
+      console.error("Error checking superuser:", err);
+    }
   };
 
-  const getSubject = (subjectId) => {
-    api.get(`/api/subject/${subjectId}/`)
-      .then((res) => {
-        const subjectData = res.data;
-        setOneSubject(subjectData);
-        console.log(subjectData.id);
-      })
-      .catch((err) => toast.error(err));
+  const getSubject = async (subjectId) => {
+    try {
+      const res = await api.get(`/api/subject/${subjectId}/`);
+      const subjectData = res.data;
+      setOneSubject(subjectData);
+      console.log(subjectData.id);
+    } catch (err) {
+      toast.error(err.message);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const createCourseContent = {
       title,
@@ -51,15 +50,16 @@ const AddCourseContent = () => {
       subject: oneSubject ? oneSubject.id : ""
     };
 
-    api.post(`/api/course-content/`, createCourseContent)
-      .then((res) => {
-        toast.success('Course Content created successfully');
-        navigate(`/subject/${id}`);
-      })
-      .catch((err) => toast.error(err));
+    try {
+      await api.post(`/api/course-content/`, createCourseContent);
+      toast.success('Course Content created successfully');
+      navigate(`/subject/${id}`);
+    } catch (err) {
+      toast.error(err.message);
+    }
   };
 
-  const handleSaveAndAnother = (e) => {
+  const handleSaveAndAnother = async (e) => {
     e.preventDefault();
     const createTextBook = {
       title,
@@ -68,22 +68,22 @@ const AddCourseContent = () => {
       subject: oneSubject ? oneSubject.id : ""
     };
 
-    api.post(`/api/course-content/`, createTextBook)
-      .then((res) => {
-        toast.success('Course Content created successfully');
-        // Clear form fields
-        setTitle('');
-        setDescription('');
-        setHrsPw('');
-      })
-      .catch((err) => toast.error(err));
+    try {
+      await api.post(`/api/course-content/`, createTextBook);
+      toast.success('Course Content created successfully');
+      // Clear form fields
+      setTitle('');
+      setDescription('');
+      setHrsPw('');
+    } catch (err) {
+      toast.error(err.message);
+    }
   };
 
   return (
     <>
       {isSuperUser ? (
         <div className="isolate bg-gray-100 px-6 py-24 sm:py-32 lg:px-8">
-
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-indigo-600 sm:text-4xl">Add Course Content</h2>
             <p className="mt-2 text-lg leading-8 text-gray-600">

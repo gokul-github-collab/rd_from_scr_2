@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import sk from '../assets/images/sk.png';
+import ski from '../assets/images/skii.png';
 import ai1 from '../assets/images/skacas1.png';
 import api from '../api';
 import {Link} from "react-router-dom";
@@ -50,7 +50,7 @@ export default function Navbar() {
                     <div className="flex h-16 items-center justify-between">
                       <div className="flex items-center">
                         <div className="flex-shrink-0">
-                          <img className="h-8 w-8" src={sk} alt="Your Company" />
+                          <img className="h-12 w-12" src={ski} alt="Your Company" />
                         </div>
                         <div className="hidden md:block">
                           <div className="ml-10 flex items-baseline space-x-4">
