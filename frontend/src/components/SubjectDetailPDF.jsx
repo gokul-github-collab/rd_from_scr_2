@@ -125,15 +125,15 @@ const SubjectDetailPDF = ({ sid }) => {
   }
   const getSubject = (sid) => {
     api.get(`/api/subject/${sid}/`)
-        .then((res) => {
-          getSemester(res.data.semester);
-          setSubject(res.data);
-          if (res.data.cc) {
-            const hours = res.data.cc.reduce((sum, module) => sum + (module.hrs_pw || 0), 0);
-            setTotalHours(hours);
-          }
-        })
-        .catch(err => toast.error(err));
+      .then((res) => {
+        getSemester(res.data.semester);
+        setSubject(res.data);
+        if (res.data.cc) {
+          const hours = res.data.cc.reduce((sum, module) => sum + (module.hrs_pw || 0), 0);
+          setTotalHours(hours);
+        }
+      })
+      .catch(err => toast.error(err));
   };
 
   const [contentHeight, setContentHeight] = useState(0);
@@ -322,7 +322,7 @@ const SubjectDetailPDF = ({ sid }) => {
             {subject && subject.rb && subject.rb.map((rb, index) => (
               <View style={styles.tableRow} key={index}>
                 <View style={styles.tableColSno}>
-                  <Text style={styles.tableCell}>{index+1}</Text>
+                  <Text style={styles.tableCell}>{index + 1}</Text>
                 </View>
                 <View style={styles.tableCol}>
                   <Text style={styles.tableCell}>{rb.name}</Text>
@@ -337,9 +337,9 @@ const SubjectDetailPDF = ({ sid }) => {
               </View>
             </View>
             {subject && subject.wr && subject.wr.map((wr, index) => (
-              <View style={styles.tableRow} key={index }>
+              <View style={styles.tableRow} key={index}>
                 <View style={styles.tableColSno}>
-                  <Text style={styles.tableCell}>{index+ 1}</Text>
+                  <Text style={styles.tableCell}>{index + 1}</Text>
                 </View>
                 <View style={styles.tableCol}>
                   <Text style={styles.tableCell}>{wr.url}</Text>
@@ -364,7 +364,8 @@ const SubjectDetailPDF = ({ sid }) => {
               </View>
             ))}
           </View>
-          {/*  */}
+
+
           <View style={styles.pageBreakLine} ></View>
           <Text style={[styles.tableCell, { textTransform: 'uppercase', fontSize: 8 }]}>
             APPLICABLE FOR STUDENTS ADMITTED FROM {syllabus ? syllabus.year : ""}
